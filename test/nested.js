@@ -16,4 +16,10 @@ describe('Context', function () {
         assert.equal(context.key, 'content.0.0.type');
         assert.equal(context.value, 'table');
     });
+
+    it('Handles deeply nested structures (2)', function () {
+        var context = jsonInspect.getContext(tree, 12, 15);
+        assert.equal(context.key, 'content.0.0.columns.1.id');
+        assert.equal(context.value, 2);
+    });
 });
