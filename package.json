@@ -18,7 +18,8 @@
     "json"
   ],
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "prepublish": "grunt build"
   },
   "directories": {
     "test": "test"
