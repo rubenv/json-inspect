@@ -27,11 +27,11 @@ function parse(str) {
             if (item.key) {
                 names.push(item.key);
             }
-        });
 
-        if (top.mode === 'array') {
-            names.push(top.index);
-        }
+            if (item.mode === 'array') {
+                names.push(item.index);
+            }
+        });
 
         return names.join('.');
     }
@@ -50,6 +50,10 @@ function parse(str) {
 
         if (top.mode === 'object') {
             expectKey = true;
+        }
+
+        if (top.mode === 'array') {
+            top.index++;
         }
 
         top.emitted = true;
@@ -75,7 +79,7 @@ function parse(str) {
             top = {
                 start: p.offset,
                 mode: 'array',
-                index: -1
+                index: 0
             };
             key.push(top);
         } else if (token === C.RIGHT_BRACKET) {
@@ -92,9 +96,6 @@ function parse(str) {
             }
 
             top.value = value;
-            if (top.mode === 'array') {
-                top.index++;
-            }
             top.emitted = false;
         } else if (token === C.COLON) { 
             // Ignore
