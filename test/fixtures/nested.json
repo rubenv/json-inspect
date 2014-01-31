@@ -1,0 +1,18 @@
+{
+  "content": [
+    [
+      {
+        "type": "table",
+        "columns": [
+          {
+            "id": 1,
+            "width": "80px"
+          },
+          {
+            "id": 2
+          }
+        ]
+      }
+    ]
+  ]
+}
