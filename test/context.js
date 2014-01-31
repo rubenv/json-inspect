@@ -44,6 +44,12 @@ describe('Context', function () {
         assert.equal(context.value, 'value');
     });
 
+    it('Extracts context information (object)', function () {
+        var context = jsonInspect(fixture, 60); 
+        assert.equal(context.key, 'object.key');
+        assert.equal(context.value, 'val');
+    });
+
     it('Extracts context information (string)', function () {
         var tree = jsonInspect.parse(fixture); 
 
