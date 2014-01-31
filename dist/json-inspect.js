@@ -20,6 +20,7 @@ function parse(str) {
     var key = [];
     var top = null;
     var expectKey = false;
+    var emit = false;
 
     function fieldName() {
         var names = [];
@@ -64,6 +65,11 @@ function parse(str) {
     p.onToken = function (token, value) {
         p._onToken(token, value);
 
+        if (emit) {
+            emitField();
+            emit = false;
+        }
+
         if (token === C.LEFT_BRACE) {
             top = {
                 start: p.offset,
@@ -72,9 +78,12 @@ function parse(str) {
             key.push(top);
             expectKey = true;
         } else if (token === C.RIGHT_BRACE) {
-            emitField();
             key.pop();
             top = key[key.length - 1];
+
+            if (top && top.mode === 'array') {
+                top.index++;
+            }
         } else if (token === C.LEFT_BRACKET) {
             top = {
                 start: p.offset,
@@ -83,7 +92,6 @@ function parse(str) {
             };
             key.push(top);
         } else if (token === C.RIGHT_BRACKET) {
-            emitField();
             key.pop();
             top = key[key.length - 1];
         } else if (token === C.STRING || token === C.NUMBER || token === C.NULL) { 
@@ -97,10 +105,10 @@ function parse(str) {
 
             top.value = value;
             top.emitted = false;
+            emit = true;
         } else if (token === C.COLON) { 
             // Ignore
         } else if (token === C.COMMA) { 
-            emitField();
             top.start = p.offset + 1;
         } else {
             throw new Error("Unknown token: " + token);
