@@ -50,7 +50,7 @@ describe('Context', function () {
         assert.equal(context.value, 'val');
     });
 
-    it('Extracts context information (string)', function () {
+    it('Extracts context information (array)', function () {
         var tree = jsonInspect.parse(fixture); 
 
         var context = jsonInspect.getContext(tree, 8, 5);
