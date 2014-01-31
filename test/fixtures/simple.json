@@ -1,0 +1,11 @@
+{
+  "string": "value",
+  "number": 3,
+  "object": {
+    "key": "val"
+  },
+  "array": [
+    1,
+    2
+  ]
+}

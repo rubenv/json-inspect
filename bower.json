@@ -1,0 +1,20 @@
+{
+  "name": "json-inspect",
+  "version": "0.0.0",
+  "authors": [
+    "Ruben Vermeersch <ruben@rocketeer.be>"
+  ],
+  "description": "Get JSON context information based on a string",
+  "main": "dist/json-inspect.js",
+  "keywords": [
+    "json"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "lib",
+    "node_modules",
+    "bower_components",
+    "test"
+  ]
+}
