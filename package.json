@@ -36,6 +36,6 @@
     "grunt-bump": "0.0.13"
   },
   "dependencies": {
-    "jsonparse": "rubenv/jsonparse#offset-tracking"
+    "jsonparse": "rubenv/jsonparse#escaped-offsets"
   }
 }
