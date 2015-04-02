@@ -1,4 +1,6 @@
-require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"6FUtuT":[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"json-inspect":[function(require,module,exports){
+module.exports=require('6FUtuT');
+},{}],"6FUtuT":[function(require,module,exports){
 var Parser = require('jsonparse');
 var C = Parser.C;
 
@@ -97,6 +99,8 @@ function parse(str) {
 
             if (top.mode === 'array') {
                 top.index++;
+            } else if (top.mode === 'object') {
+                expectKey = true;
             }
         } else if (token === C.STRING || token === C.NUMBER || token === C.NULL) { 
             if (expectKey) {
@@ -163,9 +167,7 @@ module.exports.parse = parse;
 module.exports.getContext = getContext;
 module.exports.lookupPos = lookupPos;
 
-},{"jsonparse":4}],"json-inspect":[function(require,module,exports){
-module.exports=require('6FUtuT');
-},{}],3:[function(require,module,exports){
+},{"jsonparse":4}],3:[function(require,module,exports){
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({"PcZj9L":[function(require,module,exports){
 var TA = require('typedarray')
 var xDataView = typeof DataView === 'undefined'

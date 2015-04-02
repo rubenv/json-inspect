@@ -1,0 +1,20 @@
+{
+  "subtitles": [],
+  "content": [
+    [
+      {
+        "type": "table",
+        "query": "select id,namenl as name from ev.event",
+        "columns": [
+          {
+            "caption": "Id",
+            "width": "80px"
+          },
+          {
+            "caption": "Naam"
+          }
+        ]
+      }
+    ]
+  ]
+}
