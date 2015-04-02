@@ -1,7 +1,7 @@
 {
   "name": "json-inspect",
   "description": "Get JSON context information based on a string",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "license": "MIT",
   "author": {
     "name": "Ruben Vermeersch",
