@@ -28,11 +28,13 @@ describe('New line', function () {
     });
 
     it('Extracts context information (string 2)', function () {
-        var context = jsonInspect(fixture, 3, 5); 
-        assert.equal(context.key, 'key');
-        assert.equal(context.value, 'val');
-
-        context = jsonInspect(fixture, 3, 4); 
+        var context = jsonInspect(fixture, 3, 3); 
         assert.equal(context, null);
+
+        for (var i = 4; i < 16; i++) {
+            context = jsonInspect(fixture, 3, i); 
+            assert.equal(context.key, 'key');
+            assert.equal(context.value, 'val');
+        }
     });
 });

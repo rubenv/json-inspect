@@ -34,8 +34,6 @@ module.exports = (grunt) ->
             dist:
                 files:
                     'dist/json-inspect.js': ['lib/json-inspect.js']
-                options:
-                    alias: 'lib/json-inspect.js:json-inspect'
 
         uglify:
             dist:
