@@ -1,172 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var Parser = require('jsonparse');
-var C = Parser.C;
-
-function parse(str) {
-    if (!str || typeof str !== "string") {
-        throw new Error("Not a string!");
-    }
-
-    var tree = {
-        lines: [],
-        fields: []
-    };
-
-    // Store line lengths
-    var lines = str.split("\n");
-    tree.lines = lines.map(function (line) { return line.length; });
-
-    // Parse JSON
-    var key = [];
-    var top = null;
-    var expectKey = false;
-    var emit = false;
-
-    var p = new Parser();
-    p._onToken = p.onToken;
-
-    function fieldName() {
-        var names = [];
-        key.forEach(function (item) {
-            if (item.key) {
-                names.push(item.key);
-            }
-
-            if (item.mode === 'array') {
-                names.push(item.index);
-            }
-        });
-
-        return names.join('.');
-    }
-
-    function emitField() {
-        if (top.emitted) {
-            return;
-        }
-
-        tree.fields.push({
-            key: fieldName(),
-            start: top.start,
-            end: p.offset,
-            value: top.value
-        });
-
-        if (top.mode === 'object') {
-            expectKey = true;
-        }
-
-        if (top.mode === 'array') {
-            top.index++;
-        }
-
-        top.emitted = true;
-    }
-
-    p.onToken = function (token, value) {
-        p._onToken(token, value);
-
-        if (emit) {
-            emitField();
-            emit = false;
-        }
-
-        if (token === C.LEFT_BRACE) {
-            top = {
-                start: p.offset,
-                mode: 'object'
-            };
-            key.push(top);
-            expectKey = true;
-        } else if (token === C.RIGHT_BRACE) {
-            key.pop();
-            top = key[key.length - 1];
-
-            if (top.mode === 'array') {
-                top.index++;
-            }
-        } else if (token === C.LEFT_BRACKET) {
-            top = {
-                start: p.offset,
-                mode: 'array',
-                index: 0
-            };
-            key.push(top);
-        } else if (token === C.RIGHT_BRACKET) {
-            key.pop();
-            top = key[key.length - 1];
-
-            if (top.mode === 'array') {
-                top.index++;
-            } else if (top.mode === 'object') {
-                expectKey = true;
-            }
-        } else if (token === C.STRING || token === C.NUMBER || token === C.NULL) { 
-            if (expectKey) {
-                top.start = p.offset;
-                top.key = value;
-                top.value = null;
-                expectKey = false;
-                return;
-            }
-
-            top.value = value;
-            top.emitted = false;
-            emit = true;
-        } else if (token === C.COLON) { 
-            // Ignore
-        } else if (token === C.COMMA) { 
-            top.start = p.offset + 1;
-        } else {
-            throw new Error("Unknown token: " + token);
-        }
-    };
-    try {
-        p.write(str);
-    } catch (e) {
-        // Ignore
-    }
-
-    return tree;
-}
-
-function lookupPos(tree, line, ch) {
-    var offset = 0;
-    for (var i = 0; i < line - 1; i++) { // Lines are index-by-1
-        offset += tree.lines[i] + 1; // Add one for newline
-    }
-
-    return offset + ch - 1; // Chars are index-by-1
-}
-
-function getContext(tree, line, ch) {
-    var pos = line;
-    if (arguments.length === 3 && ch) {
-        pos = lookupPos(tree, line, ch);
-    }
-
-    var context = null;
-    for (var i = 0; i < tree.fields.length; i++) {
-        var field = tree.fields[i];
-        if (field.start <= pos && field.end >= pos) {
-            context = field;
-            break;
-        }
-    }
-
-    return context;
-}
-
-module.exports = function (str, line, ch) {
-    var tree = parse(str);
-    return getContext(tree, line, ch);
-};
-
-module.exports.parse = parse;
-module.exports.getContext = getContext;
-module.exports.lookupPos = lookupPos;
-
-},{"jsonparse":6}],2:[function(require,module,exports){
+require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -282,7 +114,7 @@ function fromByteArray (uint8) {
   return parts.join('')
 }
 
-},{}],3:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 (function (global){
 /*!
  * The buffer module from node.js, for the browser.
@@ -2075,7 +1907,7 @@ function isnan (val) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"base64-js":2,"ieee754":4,"isarray":5}],4:[function(require,module,exports){
+},{"base64-js":1,"ieee754":3,"isarray":4}],3:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -2161,14 +1993,14 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],5:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],6:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 (function (Buffer){
 /*global Buffer*/
 // Named constants with unique integer values
@@ -2572,4 +2404,172 @@ Parser.C = C;
 module.exports = Parser;
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":3}]},{},[1]);
+},{"buffer":2}],"json-inspect":[function(require,module,exports){
+var Parser = require('jsonparse');
+var C = Parser.C;
+
+function parse(str) {
+    if (!str || typeof str !== "string") {
+        throw new Error("Not a string!");
+    }
+
+    var tree = {
+        lines: [],
+        fields: []
+    };
+
+    // Store line lengths
+    var lines = str.split("\n");
+    tree.lines = lines.map(function (line) { return line.length; });
+
+    // Parse JSON
+    var key = [];
+    var top = null;
+    var expectKey = false;
+    var emit = false;
+
+    var p = new Parser();
+    p._onToken = p.onToken;
+
+    function fieldName() {
+        var names = [];
+        key.forEach(function (item) {
+            if (item.key) {
+                names.push(item.key);
+            }
+
+            if (item.mode === 'array') {
+                names.push(item.index);
+            }
+        });
+
+        return names.join('.');
+    }
+
+    function emitField() {
+        if (top.emitted) {
+            return;
+        }
+
+        tree.fields.push({
+            key: fieldName(),
+            start: top.start,
+            end: p.offset,
+            value: top.value
+        });
+
+        if (top.mode === 'object') {
+            expectKey = true;
+        }
+
+        if (top.mode === 'array') {
+            top.index++;
+        }
+
+        top.emitted = true;
+    }
+
+    p.onToken = function (token, value) {
+        p._onToken(token, value);
+
+        if (emit) {
+            emitField();
+            emit = false;
+        }
+
+        if (token === C.LEFT_BRACE) {
+            top = {
+                start: p.offset,
+                mode: 'object'
+            };
+            key.push(top);
+            expectKey = true;
+        } else if (token === C.RIGHT_BRACE) {
+            key.pop();
+            top = key[key.length - 1];
+
+            if (top.mode === 'array') {
+                top.index++;
+            }
+        } else if (token === C.LEFT_BRACKET) {
+            top = {
+                start: p.offset,
+                mode: 'array',
+                index: 0
+            };
+            key.push(top);
+        } else if (token === C.RIGHT_BRACKET) {
+            key.pop();
+            top = key[key.length - 1];
+
+            if (top.mode === 'array') {
+                top.index++;
+            } else if (top.mode === 'object') {
+                expectKey = true;
+            }
+        } else if (token === C.STRING || token === C.NUMBER || token === C.NULL) { 
+            if (expectKey) {
+                top.start = p.offset;
+                top.key = value;
+                top.value = null;
+                expectKey = false;
+                return;
+            }
+
+            top.value = value;
+            top.emitted = false;
+            emit = true;
+        } else if (token === C.COLON) { 
+            // Ignore
+        } else if (token === C.COMMA) { 
+            top.start = p.offset + 1;
+        } else {
+            throw new Error("Unknown token: " + token);
+        }
+    };
+    try {
+        p.write(str);
+    } catch (e) {
+        // Ignore
+    }
+
+    return tree;
+}
+
+function lookupPos(tree, line, ch) {
+    var offset = 0;
+    for (var i = 0; i < line - 1; i++) { // Lines are index-by-1
+        offset += tree.lines[i] + 1; // Add one for newline
+    }
+
+    return offset + ch - 1; // Chars are index-by-1
+}
+
+function getContext(tree, line, ch) {
+    var pos = line;
+    if (arguments.length === 3 && ch) {
+        pos = lookupPos(tree, line, ch);
+    }
+
+    var context = null;
+    for (var i = 0; i < tree.fields.length; i++) {
+        var field = tree.fields[i];
+        if (field.start <= pos && field.end >= pos) {
+            context = field;
+            break;
+        }
+    }
+
+    return context;
+}
+
+module.exports = function (str, line, ch) {
+    var tree = parse(str);
+    return getContext(tree, line, ch);
+};
+
+module.exports.parse = parse;
+module.exports.getContext = getContext;
+module.exports.lookupPos = lookupPos;
+
+},{"jsonparse":5}]},{},["json-inspect"]);
